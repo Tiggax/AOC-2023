@@ -17,3 +17,10 @@ in the directory or just simply run on your data by:
 use part1.nu
 part1.nu  
 ```
+## Rust
+
+The rust implementation is made as a workspace.
+Each day has its own crate, that contains two binaries part1 and part2,
+you can test the whole workspace by runing `cargo test` or specific day by running `cargo test  -p day-{n}`.
+
+To run the solution simply run: `cargo run -p day-{n} --bin part{x}`
