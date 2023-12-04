@@ -37,7 +37,7 @@ impl SerialNumber {
         } else {
             self.start - 1
         };
-        let end = if self.end == max {
+        let end = if self.end + 1 == max {
             self.end
         } else {
             self.end + 1
@@ -115,6 +115,47 @@ fn part1(input: &str) -> u32 {
                 sn = None;
             }
         }
+        if let Some(s) = sn {
+            dbg!(&s);
+            // check start of dig
+            if s.start > 0 {
+                if let Some(val) = line.get(s.start - 1) {
+                    if *val != '.' && !val.is_digit(10) {
+                        cnt += s.number;
+                        sn = None;
+                        println!("add 2 = {val}");
+                        continue;
+                    }
+                }
+            }
+            // check above
+            if s.row > 0 {
+                if let Some(above) = matrix.get(s.row - 1) {
+                    dbg!(s.get_range(above.len()));
+                    if let Some(vals) = above.get(s.get_range(above.len())) {
+                        println!("3 - : {:?}", &vals);
+                        if let Some(_) = vals.iter().find(|c| !c.is_digit(10) && **c != '.') {
+                            cnt += s.number;
+                            sn = None;
+                            println!("add 3");
+                            continue;
+                        }
+                    }
+                }
+            }
+            // check bottom
+            if let Some(below) = matrix.get(s.row + 1) {
+                if let Some(vals) = below.get(s.get_range(below.len())) {
+                    if let Some(_) = vals.iter().find(|c| !c.is_digit(10) && **c != '.') {
+                        cnt += s.number;
+                        sn = None;
+                        println!("add 4");
+                        continue;
+                    }
+                }
+            }
+        }
+        //check
     }
     cnt
 }
@@ -128,6 +169,58 @@ mod tests {
         let input = include_str!("../../data/test_input1.txt");
         let result = part1(input);
         assert_eq!(result, 4361);
+    }
+
+    #[test]
+    fn basic() {
+        let input = ".....\n.123.\n.....";
+        let result = part1(input);
+        assert_eq!(result, 0);
+    }
+    #[test]
+    fn tl() {
+        let input = "*....\n.123.\n.....";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+    #[test]
+    fn tr() {
+        let input = "....*\n.123.\n.....";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+    #[test]
+    fn bl() {
+        let input = ".....\n.123.\n*....";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+    #[test]
+    fn br() {
+        let input = ".....\n.123.\n....*";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+
+    #[test]
+    fn left_num() {
+        let input = "*....\n123..\n.....";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+    #[ignore]
+    #[test]
+    fn right_num() {
+        let input = ".....\n..123\n....*";
+        let result = part1(input);
+        assert_eq!(result, 123);
+    }
+
+    #[test]
+    fn right_num_not_edge() {
+        let input = ".....\n..123\n...*.";
+        let result = part1(input);
+        assert_eq!(result, 123);
     }
 
     mod serialnumbers {
