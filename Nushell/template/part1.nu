@@ -1,8 +1,14 @@
-export def main [] {
-	let input = ( open data/input1.txt )
+export def main [
+	name: string@"data" = "test" # on what data to run test or input
+] {
+	let input = ( open $"data/($name)1.txt" )
 
 	fun $input
 	
+}
+
+def data [] {
+	["test" "input"]
 }
 
 def fun [input: string] {
