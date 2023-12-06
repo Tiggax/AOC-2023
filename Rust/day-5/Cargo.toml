@@ -1,0 +1,16 @@
+[package]
+name = "day-5"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "part1"
+test = true
+bench = true
+
+[[bin]]
+name = "part2"
+test = true
+bench = true
+
+
