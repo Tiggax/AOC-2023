@@ -63,7 +63,13 @@ impl Mapper {
             .collect()
     }
     fn rev_map(&self, seed: usize) -> usize {
-        if let Some(val) = self.maps.iter().filter_map(|map| map.rev_map(seed)).last() {
+        if let Some(val) = self
+            .maps
+            .iter()
+            .rev()
+            .filter_map(|map| map.rev_map(seed))
+            .last()
+        {
             val
         } else {
             seed
@@ -124,7 +130,7 @@ fn part2(input: &str) -> usize {
         if min % 100000 == 0 {
             println!("testing {min}:");
         }
-        let out = maps.iter().rev().fold(min, move |acc, e| {
+        let out = maps.iter().fold(min, move |acc, e| {
             let a = acc.clone();
             let out = e.rev_map(acc);
             if min % 100000 == 0 {
@@ -189,7 +195,7 @@ mod tests {
             out
         });
 
-        let result = zaps.into_iter().rev().fold(map[0], |acc, map| {
+        let result = zaps.into_iter().fold(map[0], |acc, map| {
             let input = acc.clone();
             let out = map.rev_map(input);
             dbg!(&out);
